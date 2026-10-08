@@ -1,14 +1,21 @@
 def most_frequent(items: list):
-    items_len = len(items)
-    if not items_len:
+    if not items:
         return None
 
-    count = 0
-    element_value = None
-    for element in items:
-        check = items.count(element)
+    counts = {}
 
-        if check > count:
-            count = check
-            element_value = element
-    return element_value
+    for element in items:
+        if element in counts:
+            counts[element] += 1
+        else:
+            counts[element] = 1
+
+    highest_count = 0
+    most_frequent_element = None
+
+    for element, count in counts.items():
+        if count > highest_count:
+            highest_count = count
+            most_frequent_element = element
+
+    return most_frequent_element
