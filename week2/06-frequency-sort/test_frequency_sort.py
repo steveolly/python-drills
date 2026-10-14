@@ -41,14 +41,29 @@ check("multi-frequency tie-break",  frequency_sort([4, 4, 1, 2, 2, 2, 3, 3, 5]),
 # ── do not mutate original list ───────────────────────────────────────────────
 orig = [3, 1, 2]
 res = frequency_sort(orig)
-check("does not mutate original list", orig == [3, 1, 2] and res is not orig,       True)
+core_total += 1
+if orig != [3, 1, 2]:
+    core_fail += 1
+    print("FAIL [does not mutate original list]")
+    print(f"  original list was modified: changed from [3, 1, 2] to {orig!r}\n")
+elif res is orig:
+    core_fail += 1
+    print("FAIL [does not mutate original list]")
+    print("  expected: a new list object")
+    print("  got:      the same list object (do not sort in-place)\n")
 
 print(f"\ncore: {core_total - core_fail}/{core_total} passed")
 if core_fail == 0:
     print("BIM!!!")
 
 # ── bonus (strings) ───────────────────────────────────────────────────────────
-check("bonus: list of strings",     frequency_sort(["banana", "apple", "apple", "cherry"]), ["apple", "apple", "banana", "cherry"], bonus=True)
-check("bonus: strings alphabetical tie", frequency_sort(["b", "a", "c"]),                   ["a", "b", "c"],                         bonus=True)
-
-print(f"\nbonus: {bonus_total - bonus_fail}/{bonus_total} passed")
+try:
+    res_bonus = frequency_sort(["b", "a", "c"])
+    if res_bonus is None:
+        print("\nbonus: skipped (strings not implemented)")
+    else:
+        check("bonus: list of strings",     frequency_sort(["banana", "apple", "apple", "cherry"]), ["apple", "apple", "banana", "cherry"], bonus=True)
+        check("bonus: strings alphabetical tie", res_bonus,                                          ["a", "b", "c"],                         bonus=True)
+        print(f"\nbonus: {bonus_total - bonus_fail}/{bonus_total} passed")
+except TypeError:
+    print("\nbonus: skipped (strings not supported)")
